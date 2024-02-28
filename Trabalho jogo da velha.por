@@ -3,9 +3,10 @@ programa
 	cadeia jogadores[10]
 	caracter tabuleiro[3][3]
 	inteiro l, c
+	logico temVencedor
 	
 	//função para gerar o menu inicial com as opções de jogo
-	funcao menuInicial() {
+	funcao menuInicial() {
 		escreva("==> JOGO DA VELHA <== \n\n")
 		escreva("Escolha o modo de jogo: \n")
 		escreva("1) Jogador x Jogador \n")
@@ -34,22 +35,31 @@ programa
 	}
 	//função para criar o tabuleiro
 	funcao mostrarTabuleiro() {
+	escreva("\n\n 0   1    2\n\n")
       para(l = 0; l < 3; l++){
         para(c = 0; c < 3; c++)
-          jogo[l][c] = ' '
+          tabuleiro[l][c] = ' '
       }
 		para(l = 0; l < 3; l++){
         	  para(c = 0; c < 3; c++){
-        	    escreva(" ", jogo[l][c])
+        	    escreva(" ", tabuleiro[l][c])
   	        se(c < 2)
                escreva(" | ")
-    	        se(c == 2)
-               escreva("  ", l)
+             se(c == 2)
+              escreva("  ", l)
           }
           se(l < 2)
             escreva("\n------------")
-          escreva("\n")
+          escreva("\n\n")
         }
+		
+	}
+
+	funcao jogo() {
+		faca{
+			mostrarTabuleiro()	
+		}enquanto(temVencedor)
+		
 		
 	}
 	
@@ -63,7 +73,7 @@ programa
 			escolha(opcao) {
 				caso 1:
 					salvarjogadoresNaLista(jogadores)
-					mostrarTabuleiro()
+					
 					escreva("1")
 					pare
 				caso 2:
@@ -82,14 +92,14 @@ programa
 			}
 		}enquanto(opcao != 0)
 		
-	} 
+	} 
 }
 /* $$$ Portugol Studio $$$ 
  * 
  * Esta seção do arquivo guarda informações do Portugol Studio.
  * Você pode apagá-la se estiver utilizando outro editor.
  * 
- * @POSICAO-CURSOR = 567; 
+ * @POSICAO-CURSOR = 1486; 
  * @PONTOS-DE-PARADA = ;
  * @SIMBOLOS-INSPECIONADOS = ;
  * @FILTRO-ARVORE-TIPOS-DE-DADO = inteiro, real, logico, cadeia, caracter, vazio;
