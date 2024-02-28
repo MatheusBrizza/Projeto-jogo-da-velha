@@ -2,8 +2,9 @@ programa
 {
 	cadeia jogadores[10]
 	caracter tabuleiro[3][3]
-	inteiro l, c
-	logico temVencedor
+	inteiro l, c, linha, coluna
+	logico temVencedor = falso
+  cadeia jogador
 	
 	//fun√ß√£o para gerar o menu inicial com as op√ß√µes de jogo
 	funcao menuInicial() {
@@ -18,9 +19,8 @@ programa
 	}
 	//fun√ß√£o que salva o nome dos jogadores na lista de jogadores
 	funcao salvarjogadoresNaLista(cadeia lista[]) {
-		cadeia jogador
-		para(inteiro i=1; i<=2; i++) {
-		escreva("\nJogador " + i + " informe seu nome: ")
+		para(inteiro i=0; i<=1; i++) {
+		escreva("\nJogador " + i+1 + " informe seu nome: ")
 		leia(jogador)		
 			se(lista[i] == "") {
 				lista[i] = jogador
@@ -55,13 +55,25 @@ programa
 		
 	}
 
-	funcao jogo() {
+	funcao jogo(cadeia lista[]) {
 		faca{
-			mostrarTabuleiro()	
-		}enquanto(temVencedor)
+			mostrarTabuleiro()
+      escreva("jogador escolha a linha e coluna da posiÁ„o que quer jogar: ")
+      leia(linha, coluna)
+      validarPosicao(linha, coluna)
+
+		}enquanto(temVencedor != verdadeiro)
 		
 		
 	}
+
+  funcao validarPosicao(inteiro linha, inteiro coluna) {
+    se(linha < 0 ou linha > 2) {
+      escreva("linha inv·lida!")
+    }senao se (coluna < 0 ou coluna > 2) {
+      escreva("coluna inv·lida!")
+    }
+  }
 	
 	funcao inicio()
 	{
@@ -73,7 +85,7 @@ programa
 			escolha(opcao) {
 				caso 1:
 					salvarjogadoresNaLista(jogadores)
-					
+					jogo(jogadores)
 					escreva("1")
 					pare
 				caso 2:
