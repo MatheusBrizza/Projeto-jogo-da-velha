@@ -1,5 +1,6 @@
 programa
 {
+	inclua biblioteca Util --> u
 	cadeia jogadores[10]
 	caracter tabuleiro[3][3]
 	inteiro l, c, linha, coluna, jogadas = 0, ganhou = 0
@@ -23,8 +24,8 @@ programa
 	//funÃ§Ã£o que salva o nome dos jogadores na lista de jogadores
 	funcao salvarjogadoresNaLista(cadeia lista[]) {
 		para(inteiro i=0; i<=1; i++) {
-		escreva("\nJogador " + (i+1) + " informe seu nome: ")
-		leia(jogador)		
+			escreva("\nJogador " + (i+1) + " informe seu nome: ")
+			leia(jogador)		
 			se(lista[i] == "") {
 				lista[i] = jogador
 				escreva(jogador, " foi adicionado à lista \n\n")
@@ -35,6 +36,17 @@ programa
 				escreva(lista[i], " ")
 			}*/
 			
+	}
+
+	funcao salvarJogadorNaLista(cadeia lista[]) {
+		para(inteiro i=0; i<1; i++) {
+			escreva("\nJogador " + (i+1) + " informe seu nome: ")
+			leia(jogador)		
+			se(lista[i] == "") {
+				lista[i] = jogador
+				escreva(jogador, " foi adicionado à lista \n\n")
+			}
+		}		
 	}
 		//funÃ§Ã£o para criar o tabuleiro
 	funcao mostrarTabuleiro() {
@@ -53,15 +65,41 @@ programa
           escreva("\n")
         }
 	}
-	
-	funcao jogo(cadeia lista[]) {
+
+	//função para juntar todas as funções juntas e montar o jogo todo.
+	funcao partidaJogadores(cadeia lista[]) {
 		faca{
 			mostrarTabuleiro()
-			escreva("jogador escolha a linha e coluna da posição que quer jogar: ")
-			leia(linha, coluna)
+			escreva("\njogador escolha a LINHA da posição que quer jogar: ")
+			leia(linha)
+			escreva("\njogador escolha a COLUNA da posição que quer jogar: ")
+			leia(coluna)
 			validarPosicao(linha, coluna)
+			fazerJogada(linha, coluna)
 			validarFinalPartida(tabuleiro)
-		}enquanto(finalPartida != verdadeiro)
+		}enquanto(ganhou == 0 e jogadas < 9)
+/*		escreva("Deseja jogar novamente?(y/n): ")
+		leia(resposta)
+		se(resposta == 'y') {
+			//partida()
+		}senao se(resposta == 'n') {
+			//inicio()
+		} senao {
+			escreva("opção inválida!")
+		}
+*/	}
+
+	funcao partidaJogadorCPU(cadeia lista[]) {
+		faca{
+			mostrarTabuleiro()
+			escreva("\njogador escolha a LINHA da posição que quer jogar: ")
+			leia(linha)
+			escreva("\njogador escolha a COLUNA da posição que quer jogar: ")
+			leia(coluna)
+			validarPosicao(linha, coluna)
+			fazerJogada(linha, coluna)
+			validarFinalPartida(tabuleiro)
+		}enquanto(ganhou == 0 e jogadas < 9)
 	}
 	// função para validar se coordenadas descritas são válidas
 	funcao validarPosicao(inteiro linha, inteiro coluna) {
@@ -73,8 +111,7 @@ programa
 	}
 
 	funcao logico validarFinalPartida(caracter tabuleiro[][]) {
-		faca {
-			fazerJogada(linha, coluna)
+		//faca {
 			para(l = 0; l < 3; l++){
 				se(tabuleiro[l][0] == '0' e tabuleiro[l][1] == '0' e tabuleiro[l][2] == '0'){
 					ganhou = 1	
@@ -93,20 +130,20 @@ programa
 	        }
 	    
 	        
-	        // verificar ganhador na diagonal normal
+	        // verificar ganhador na diagonal normal(\)
 			se(tabuleiro[0][0] == '0' e tabuleiro[1][1] == '0' e tabuleiro[2][2] == '0') {
 				ganhou = 1
 			}senao se(tabuleiro[0][0] == 'X' e tabuleiro[1][1] == 'X' e tabuleiro[2][2] == 'X') {
 				ganhou = 2
 			}
 	          
-	        // verificar ganhador na diagonal inversa
+	        // verificar ganhador na diagonal inversa(/)
 			se(tabuleiro[0][2] == '0' e tabuleiro[1][1] == '0' e tabuleiro[2][0] == '0') {
 				ganhou = 1
 			}senao se(tabuleiro[0][2] == 'X' e tabuleiro[1][1] == 'X' e tabuleiro[2][0] == 'X') {
 				ganhou = 2
 			}
-		}enquanto(ganhou == 0 e jogadas < 9)
+	//	}enquanto(ganhou == 0 e jogadas < 9)
 		
 		se(ganhou == 1) {
 			escreva("\n\tParabéns Jogador 1. Você ganhou!\n\n")
@@ -132,6 +169,30 @@ programa
 		}
 		
 	}
+
+	funcao fazerJogadaCPU(inteiro linha, inteiro coluna) {
+		se(tabuleiro[linha][coluna] != ' ') {
+			escreva("Posição já preenchida!\n")
+		}senao se(tipoJogador == 'X') {
+			tabuleiro[linha][coluna] = 'X'
+			tipoJogador = 'O'
+			jogadas++
+		}senao {
+			u.sorteia(linha,coluna)
+			tabuleiro[linha][coluna] = 'O'
+			tipoJogador = 'X'
+			jogadas++
+		}
+		
+	}
+	funcao inteiro jogadaCPU() {
+		inteiro linhaCPU, colunaCPU
+		u.sorteia(0, 2)
+		leia(linhaCPU)
+		u.sorteia(0, 2)
+		leia(colunaCPU)
+		retorne linhaCPU 
+	}
 	
 	funcao inicio(){
 		inteiro opcao
@@ -148,10 +209,10 @@ programa
 			escolha(opcao) {
 				caso 1:
 					salvarjogadoresNaLista(jogadores)
-					jogo(jogadores)
-					escreva("1")
+					partidaJogadores(jogadores)
 					pare
 				caso 2:
+					partidaJogadorCPU(jogadores)
 					escreva("2")
 					pare
 				caso 3:
@@ -174,9 +235,9 @@ programa
  * Esta seção do arquivo guarda informações do Portugol Studio.
  * Você pode apagá-la se estiver utilizando outro editor.
  * 
- * @POSICAO-CURSOR = 1629; 
+ * @POSICAO-CURSOR = 5328; 
  * @PONTOS-DE-PARADA = ;
- * @SIMBOLOS-INSPECIONADOS = {l, 5, 9, 1}-{c, 5, 12, 1}-{jogadas, 5, 30, 7}-{ganhou, 5, 43, 6};
+ * @SIMBOLOS-INSPECIONADOS = ;
  * @FILTRO-ARVORE-TIPOS-DE-DADO = inteiro, real, logico, cadeia, caracter, vazio;
  * @FILTRO-ARVORE-TIPOS-DE-SIMBOLO = variavel, vetor, matriz, funcao;
  */
