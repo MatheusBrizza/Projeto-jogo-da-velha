@@ -3,7 +3,7 @@ programa
 	inclua biblioteca Util --> u
 	cadeia jogadores[10]
 	caracter tabuleiro[3][3]
-	inteiro l, c, linha, coluna, jogadas = 0, ganhou = 0
+	inteiro l, c, linha, coluna, jogadas = 0, ganhador = 0
 	logico finalPartida = falso
 	cadeia jogador
 	caracter tipoJogador = 'X', resposta = ' '
@@ -21,7 +21,7 @@ programa
 		escreva("Escolha uma opção: ")
 	}
 	
-	//funÃ§Ã£o que salva o nome dos jogadores na lista de jogadores
+	//função que salva o nome dos jogadores na lista de jogadores para o placar(WIP)
 	funcao salvarjogadoresNaLista(cadeia lista[]) {
 		para(inteiro i=0; i<=1; i++) {
 			escreva("\nJogador " + (i+1) + " informe seu nome: ")
@@ -30,14 +30,10 @@ programa
 				lista[i] = jogador
 				escreva(jogador, " foi adicionado à lista \n\n")
 			}
-		}
-			// mÃ©todo para mostrar os jogadores da lista
-			/*para(inteiro i=1; i<=2; i++) {
-				escreva(lista[i], " ")
-			}*/
-			
+		}	
 	}
-
+	
+	//Função para salvar o nome do jogador na lista de jogadores para o placar(WIP)
 	funcao salvarJogadorNaLista(cadeia lista[]) {
 		para(inteiro i=0; i<1; i++) {
 			escreva("\nJogador " + (i+1) + " informe seu nome: ")
@@ -48,10 +44,11 @@ programa
 			}
 		}		
 	}
-		//funÃ§Ã£o para criar o tabuleiro
+	
+	//função para mostrar o tabuleiro no console
 	funcao mostrarTabuleiro() {
 
-        escreva("\n\n 0   1    2\n\n")
+        escreva("\n\n 0    1    2\n\n")
         para(l = 0; l < 3; l++){
           para(c = 0; c < 3; c++){
             escreva(" ", tabuleiro[l][c])
@@ -66,78 +63,87 @@ programa
         }
 	}
 
-	//função para juntar todas as funções juntas e montar o jogo todo.
+	//função para executar o jogo de jogador X CPU
 	funcao partidaJogadores() {
 		limpa()
 		faca{
 			mostrarTabuleiro()
-			escreva("\njogador escolha a LINHA e COLUNA da posição que quer jogar: ")
+			escreva("\njogador ",tipoJogador, " escolha a LINHA e COLUNA da posição que quer jogar: ")
 			leia(linha, coluna)
 			se ((linha >= 0 e linha <= 2) e (coluna >= 0 e coluna <= 2)){
-				// validarPosicao(linha, coluna)
 				se(tabuleiro[linha][coluna] == ' '){
-					fazerJogada(linha, coluna)
-					validarFinalPartida(tabuleiro)	
+					se (ganhador ==0) {
+					fazerJogada(linha, coluna)	
+					}					
 				}senao{
 					escreva("Movimento invalido, posição já preenchida. Tente novamente")
 				}
 			}			
-		}enquanto(ganhou == 0 e jogadas < 9)
+		}enquanto(ganhador == 0 e jogadas < 9)
 		escreva("Deseja jogar novamente?(y/n): ")
 		leia(resposta)
 		repetirPartidaJogadores(resposta)
 	}
 
-
-
+	//função para executar o jogo de jogador X CPU
 	funcao partidaJogadorCPU() {
+		limpa()
 		faca{
 			mostrarTabuleiro()
-			escreva("\njogador escolha a LINHA e COLUNA da posição que quer jogar: ")
+			escreva("\njogador ",tipoJogador, " escolha a LINHA e COLUNA da posição que quer jogar: ")
 			leia(linha, coluna)
 			se ((linha >= 0 e linha <= 2) e (coluna >= 0 e coluna <= 2)){
-				// validarPosicao(linha, coluna)
 				se(tabuleiro[linha][coluna] == ' '){
 					fazerJogada(linha, coluna)
-					fazerJogadaCPU()
-					validarFinalPartida(tabuleiro)	
+					se (ganhador ==0) {
+						fazerJogadaCPU()	
+					}
 				}senao{
 					escreva("Movimento invalido, posição já preenchida. Tente novamente")
 				}
 			}			
-		}enquanto(ganhou == 0 e jogadas < 9)
+		}enquanto(ganhador == 0 e jogadas < 9)
 		escreva("Deseja jogar novamente?(y/n): ")
 		leia(resposta)
 		repetirPartidaJogadorCPU(resposta)
 	}
-	// função para validar se coordenadas descritas são válidas
-/*	funcao validarPosicao(inteiro linha, inteiro coluna) {
-		faca{
-			se(linha < 0 ou linha > 2) {
-				escreva("Linha inválida!\n")
-			}senao se (coluna < 0 ou coluna > 2) {
-				escreva("Coluna inválida!\n")
-			}
-		}enquanto((linha < 0 ou linha > 2) e (coluna < 0 ou coluna > 2))
-	}*/
 
-		//função para fazer a jogada
+	//funcao para executar o jogo de CPU x CPU
+	funcao partidaCPUs() {
+		limpa()
+		faca{
+			mostrarTabuleiro()
+			//escreva("\njogador ",tipoJogador, " escolha a LINHA e COLUNA da posição que quer jogar: ")
+			//leia(linha, coluna)
+			se ((linha >= 0 e linha <= 2) e (coluna >= 0 e coluna <= 2)){
+					se (ganhador ==0) {
+						fazerJogadaCPU()	
+					}
+			}			
+		}enquanto(ganhador == 0 e jogadas < 9)
+		escreva("Deseja jogar novamente?(y/n): ")
+		leia(resposta)
+		repetirPartidaCPUs(resposta)
+	}	
+		
+	//função que faz a jogada e muda a vez para o próximo jogador e aumenta o contador de jogadas
 	funcao fazerJogada(inteiro linha, inteiro coluna) {
 		se(tipoJogador == 'X') {
 			tabuleiro[linha][coluna] = 'X'
 			tipoJogador = 'O'
 			jogadas++
+			validarFinalPartida(tabuleiro)
 		}senao {
 			tabuleiro[linha][coluna] = 'O'
 			tipoJogador = 'X'
 			jogadas++
+			validarFinalPartida(tabuleiro)
 		}			
-		
-		
 	}
-
+	
+	//função que faz a jogada do CPU e muda a vez para o jogador e aumenta o contador de jogadas
 	funcao fazerJogadaCPU() {
-		faca{
+		se(jogadas < 9) {
 	         	linha = u.sorteia(0,2)
 			coluna = u.sorteia(0,2)
 			se(tabuleiro[linha][coluna] == ' ') {	
@@ -145,63 +151,69 @@ programa
 					tabuleiro[linha][coluna] = 'X'
 					tipoJogador = 'O'
 					jogadas++
+					validarFinalPartida(tabuleiro)
 				}senao {
 					tabuleiro[linha][coluna] = 'O'
 					tipoJogador = 'X'
 					jogadas++
+					validarFinalPartida(tabuleiro)
 				}
 			}senao{
 				fazerJogadaCPU()
 			}
-		}enquanto(jogadas>9)
+		}
 	}
 	
+	//função que verifica todas as maneiras de vencer para confirmar se teve vencedor
 	funcao validarFinalPartida(caracter tabuleiro[][]) {
-		//faca {
-			para(l = 0; l < 3; l++){
-				se(tabuleiro[l][0] == '0' e tabuleiro[l][1] == '0' e tabuleiro[l][2] == '0'){
-					ganhou = 1	
+			//  verificar ganhador por linhas
+			para(l = 0; l <= 2; l++){
+				se(tabuleiro[l][0] == 'O' e tabuleiro[l][1] == 'O' e tabuleiro[l][2] == 'O'){
+					ganhador = 1	
 				} senao se(tabuleiro[l][0] == 'X' e tabuleiro[l][1] == 'X' e tabuleiro[l][2] == 'X') {
-					ganhou = 2				
+					ganhador = 2				
 				}
 			}
 	            
 	        // verificar ganhador por colunas
-			para(c = 0; c < 3; c++){
-				se(tabuleiro[0][c] == '0' e tabuleiro[1][c] == '0' e tabuleiro[2][c] == '0') {
-					ganhou = 1				
+			para(c = 0; c <= 2; c++){
+				se(tabuleiro[0][c] == 'O' e tabuleiro[1][c] == 'O' e tabuleiro[2][c] == 'O') {
+					ganhador = 1				
 				}senao se(tabuleiro[0][c] == 'X' e tabuleiro[1][c] == 'X' e tabuleiro[2][c] == 'X') {
-					ganhou = 2		
+					ganhador = 2		
 				}
 	        }
 	    
 	        
 	        // verificar ganhador na diagonal normal(\)
-			se(tabuleiro[0][0] == '0' e tabuleiro[1][1] == '0' e tabuleiro[2][2] == '0') {
-				ganhou = 1
+			se(tabuleiro[0][0] == 'O' e tabuleiro[1][1] == 'O' e tabuleiro[2][2] == 'O') {
+				ganhador = 1
 			}senao se(tabuleiro[0][0] == 'X' e tabuleiro[1][1] == 'X' e tabuleiro[2][2] == 'X') {
-				ganhou = 2
+				ganhador = 2
 			}
 	          
 	        // verificar ganhador na diagonal inversa(/)
-			se(tabuleiro[0][2] == '0' e tabuleiro[1][1] == '0' e tabuleiro[2][0] == '0') {
-				ganhou = 1
+			se(tabuleiro[0][2] == 'O' e tabuleiro[1][1] == 'O' e tabuleiro[2][0] == 'O') {
+				ganhador = 1
 			}senao se(tabuleiro[0][2] == 'X' e tabuleiro[1][1] == 'X' e tabuleiro[2][0] == 'X') {
-				ganhou = 2
+				ganhador = 2
 			}
-	//	}enquanto(ganhou == 0 e jogadas < 9)
-		
-		se(ganhou == 1) {
-			escreva("\n\tParabéns Jogador 1. Você ganhou!\n\n")
-		}senao se(ganhou == 2) {
-			escreva("\n\tParabéns Jogador 2. Você ganhou!\n\n")
-		} senao se(jogadas > 9) {
-			escreva("\nEmpate!")
+		se(ganhador == 1) {
+			mostrarTabuleiro()
+			escreva("\n\tParabéns Jogador O. Você ganhou!\n\n")
+		}senao se(ganhador == 2) {
+			mostrarTabuleiro()
+			escreva("\n\tParabéns Jogador X. Você ganhou!\n\n")
+		} senao se(jogadas >= 9) {
+			mostrarTabuleiro()
+			escreva("Empate!\n\n")
 		}
 
 	}
-
+	//função que inicia uma partida nova se respoder y, se resposta for n volta ao menu inicial
 	funcao repetirPartidaJogadores(caracter resposta){
+			ganhador = 0
+			jogadas = 0
 		se(resposta == 'y') {
 			para(l = 0; l < 3; l++){
         			para(c = 0; c < 3; c++) {
@@ -217,7 +229,10 @@ programa
 		
 	}
 
+	//função que inicia uma partida nova se respoder y, se resposta for n volta ao menu inicial
 	funcao repetirPartidaJogadorCPU(caracter resposta){
+			ganhador = 0
+			jogadas = 0
 		se(resposta == 'y') {
 			para(l = 0; l < 3; l++){
         			para(c = 0; c < 3; c++) {
@@ -233,6 +248,31 @@ programa
 		
 	}
 
+	//função que inicia uma partida nova se respoder y, se resposta for n volta ao menu inicial
+	funcao repetirPartidaCPUs(caracter resposta){
+			ganhador = 0
+			jogadas = 0
+		se(resposta == 'y') {
+			para(l = 0; l < 3; l++){
+        			para(c = 0; c < 3; c++) {
+        				tabuleiro[l][c] = ' '
+        			}
+      		}
+			partidaCPUs()
+		}senao se(resposta == 'n') {
+			inicio()
+		} senao {
+			escreva("opção inválida!")
+		}
+		
+	}
+	// método para mostrar os jogadores da lista
+	funcao mostrarPlacar(cadeia lista[]) {
+					
+		para(inteiro i=1; i<=2; i++) {
+			escreva(lista[i], " ")
+		}
+	}
 	
 	funcao inicio(){
 		inteiro opcao
@@ -254,18 +294,18 @@ programa
 					pare
 				caso 2:
 					partidaJogadorCPU()
-					escreva("2")
 					pare
 				caso 3:
-					escreva("3")
+					partidaCPUs()
 					pare
 				caso 4:
-					escreva("4")
+					mostrarPlacar(jogadores)
+					escreva("Opção em desenvolvimento!\n")
 					pare
 				caso 0:
 					pare
 				caso contrario:
-					escreva("\nOpÃ§Ã£o invÃ¡lida! \n\n")
+					escreva("\nOpção inválida! \n\n")
 			}
 		}enquanto(opcao != 0)
 		
@@ -276,9 +316,9 @@ programa
  * Esta seção do arquivo guarda informações do Portugol Studio.
  * Você pode apagá-la se estiver utilizando outro editor.
  * 
- * @POSICAO-CURSOR = 5502; 
+ * @POSICAO-CURSOR = 8173; 
  * @PONTOS-DE-PARADA = ;
- * @SIMBOLOS-INSPECIONADOS = {jogadas, 6, 30, 7};
+ * @SIMBOLOS-INSPECIONADOS = ;
  * @FILTRO-ARVORE-TIPOS-DE-DADO = inteiro, real, logico, cadeia, caracter, vazio;
  * @FILTRO-ARVORE-TIPOS-DE-SIMBOLO = variavel, vetor, matriz, funcao;
  */
